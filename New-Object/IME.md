@@ -8,6 +8,7 @@
 ---
 
 ## URL
+1. [Triggering Intune Management Extension (IME) Sync](https://oliverkieselbach.com/2020/11/03/triggering-intune-management-extension-ime-sync/)
 
 ---
 

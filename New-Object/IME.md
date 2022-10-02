@@ -15,4 +15,4 @@
 ## Trigger
 |n|name|e.g.|O/P|
 |-|----|----|---|
-|1|syncApp|# %ProgramData%\Microsoft\IntuneManagementExtension\Logs\IntuneManagementExtension.log\ <br/> `$Shell = New-Object -ComObject Shell.Application` <br/> `$Shell.open("intunemanagementextension://syncapp")`|[<img src="https://i.imgur.com/RghuRaI.png">](https://i.imgur.com/RghuRaI.png)|
+|1|syncApp|# %ProgramData%\Microsoft\IntuneManagementExtension\Logs\IntuneManagementExtension.log\ <br/> `$Shell = New-Object -ComObject Shell.Application` <br/> `$Shell.open("intunemanagementextension://syncapp")`|[<img src="https://i.imgur.com/RghuRaI.png">](https://i.imgur.com/RghuRaI.png) <br/> # eventViewer\Apps&ServicesLogs\Windows\DeviceManagment-Enterprise-Diagnostics-Provider\Operational <br/> [<img src="https://i.imgur.com/7O88TQL.png">](https://i.imgur.com/7O88TQL.png)|

@@ -92,7 +92,7 @@ __SUPERCLASS                              Property      string __SUPERCLASS {get
 ## Properties
 |n|name|e.g.|O/P|
 |-|----|----|---|
-|1|default|# O/P: SystemDirectory, Organization, BuildNumber, REgisterUser, SerialNumber, Version<br/>`gwmi win32_operatingSystem`
+|1|default|# O/P: SystemDirectory, Organization, BuildNumber, RegisterUser, SerialNumber, Version<br/>`gwmi win32_operatingSystem`
 
 ---
 

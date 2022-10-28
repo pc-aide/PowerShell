@@ -2,8 +2,12 @@
 
 ---
 
-## connect-msGraph
+## new cmdLet
 ````ps1
+# Module
+Import-Module microsoft.graph.intune
+
+# Login
 Connect-MSGraph
 ````
 

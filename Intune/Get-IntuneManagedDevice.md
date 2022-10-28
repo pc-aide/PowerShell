@@ -2,7 +2,10 @@
 
 ---
 
-## Module
+## connect-msGraph
+````ps1
+Connect-MSGraph
+````
 
 ---
 

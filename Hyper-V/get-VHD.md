@@ -4,7 +4,7 @@
 
 ## Requirement
 1. hyper-V installed
-2. ?
+2. Hyper-V-PowerShell ?
 
 ---
 

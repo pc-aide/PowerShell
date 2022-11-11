@@ -4,6 +4,9 @@
 
 ## new cmdLet
 ````ps1
+# psVersion 5.x
+# not work 7.x
+
 # Module
 Install-Module microsoft.graph.intune -Force
 

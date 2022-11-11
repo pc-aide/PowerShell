@@ -5,7 +5,7 @@
 ## new cmdLet
 ````ps1
 # Module
-Import-Module microsoft.graph.intune
+Import-Module microsoft.graph.intune -Force
 
 # Login
 Connect-MSGraph

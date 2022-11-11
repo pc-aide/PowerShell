@@ -6,7 +6,6 @@
 ````ps1
 # Module
 Install-Module microsoft.graph.intune -Force
-Import-Module microsoft.graph.intune -Force
 
 # Login
 Connect-MSGraph

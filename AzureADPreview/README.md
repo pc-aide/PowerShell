@@ -6,5 +6,5 @@
 ````ps1
 Install-Module azureADPreview -Force
 
-Connect-AzureADPreview -AccountId email@test.com
+Connect-AzureADP -AccountId email@test.com
 ````

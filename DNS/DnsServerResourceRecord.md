@@ -18,4 +18,4 @@
 ## REmove
 |n|name|e.g.|O/P|
 |-|----|----|---|
-|1|DSN |Remove-DnsServerResourceRecord -ZoneName mtq.local -ComputerName A01DNS0001 -Name T01ASR0002 -RRType A -Force||
+|1|DNS |Remove-DnsServerResourceRecord -ZoneName mtq.local -ComputerName A01DNS0001 -Name T01ASR0002 -RRType A -Force||

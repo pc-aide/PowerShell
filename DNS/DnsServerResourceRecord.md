@@ -1,4 +1,4 @@
-# Get-DnsServerResourceRecord
+# DnsServerResourceRecord
 
 ---
 

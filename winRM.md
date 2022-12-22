@@ -3,7 +3,7 @@
 ---
 
 ## Doc
-1. []
+1. [winrm-https-certificate-socail-tech-MS](https://social.technet.microsoft.com/Forums/en-US/232081d3-c275-4735-a426-e17469a76283/winrm-https-certificate)
 
 ---
 

@@ -7,6 +7,13 @@
 
 ---
 
+## Add
+|n|name|e.g.|O/P|
+|-|----|----|---|
+|1|A   |Add-DnsServerResourceRecord -ZoneName "moskva.local" -A -Name "rapToc" -IPv4Address "10.46.0.32" -CreatePtr -ComputerName DNS01||
+
+---
+
 ## Get
 |n|name|e.g.|O/P|
 |-|----|----|---|

@@ -7,6 +7,10 @@
 
 ---
 
+## Application Registration
+
+---
+
 ## Get-WindowsAutoPilotInfo.ps1
 ````ps1
 # Time : ~154 seconds

@@ -2,6 +2,12 @@
 
 ---
 
+## Requirement
+1. Enroll Device Intune AutoPilot, need cable ethernet
+
+
+---
+
 ## Doc
 1. [Get-WindowsAutoPilotInfo-powershellGallery](https://www.powershellgallery.com/packages/Get-WindowsAutoPilotInfo/3.5)
 2. [Upload Windows Autopilot hardware hash easily](https://powershellisfun.com/2022/07/09/upload-windows-autopilot-hardware-hash/)
@@ -34,12 +40,31 @@
 4. go to the new folder
 5. autoPilot.cmd
 ````cmd
-c:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -executionPolicy bypass -command c:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -Command d:\scripts\autoPilot.ps1
+c:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -executionPolicy bypass -command c:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypass -Command d:\scripts\Get-WindowsAutoPilotInfo.ps1 -Online -Reboot -TenantId <tenantId> -appid <appId> -appSecret <appSecret>
 ````
-6. autoPilot.ps1
-````ps1
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Confirm:$false -Force:$true
-````
-7. [Get-WindowsAutoPilotInfo.ps1](https://github.com/pc-aide/PowerShell/blob/main/Intune/AutoPilot/3.5/Get-WindowsAutoPilotInfo/Get-WindowsAutoPilotInfo.ps1)
+6. [Get-WindowsAutoPilotInfo.ps1](https://github.com/pc-aide/PowerShell/blob/main/Intune/AutoPilot/3.5/Get-WindowsAutoPilotInfo/Get-WindowsAutoPilotInfo.ps1)
 
 [<img src="https://i.imgur.com/Podf465.png">](https://i.imgur.com/Podf465.png)
+
+---
+
+## Test
+### Boot USB
+1. Clear all disks
+
+[<img src="https://i.imgur.com/IOTsSLh.png">](https://i.imgur.com/IOTsSLh.png)
+
+2. Next after delete all drive
+3. Installing Windows 
+
+[<img src="https://i.imgur.com/MPdXWAz.png">](https://i.imgur.com/MPdXWAz.png)
+
+4. after reboot
+5. getting ready
+6. just a moment ...
+
+----
+
+### Lets start with region. is this right ?
+1. start cmd (shift + F10)
+2. go to the USB\autoPilot\

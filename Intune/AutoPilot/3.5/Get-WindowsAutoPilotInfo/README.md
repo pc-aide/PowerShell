@@ -30,6 +30,24 @@
 13 Add a client secret\Description : EnrollDevicesAutoPilot
 14. Expire : 12 months
 15. clipboard : the value 
+16. optional - test your new cred
+````ps1
+Import-Module Microsoft.Graph.Intune
+Import-Module WindowsAutopilotIntune
+
+$tenant = “string.onmicrosoft.com"
+$authority = “https://login.windows.net/$tenant"
+# AAD\app registrations\<yourAppReg>\Overview\Application (client) ID
+$clientId = “clientId"
+# # AAD\app registrations\<yourAppReg>\cert & secrets\<Value>
+$clientSecret = “clientSecret"
+
+Update-MSGraphEnvironment -AppId $clientId -Quiet
+Update-MSGraphEnvironment -AuthUrl $authority -Quiet
+Connect-MSGraph -ClientSecret $ClientSecret -Quiet
+
+Get-AutopilotDevice
+````
 
 ---
 

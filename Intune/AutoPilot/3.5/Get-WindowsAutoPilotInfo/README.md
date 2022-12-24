@@ -77,4 +77,11 @@ PowerShell -ExecutionPolicy Bypass -File d:\autoPilot\Get-WindowsAutoPilotInfo.p
   
 ---
   
-### 
+### set up for an organization
+1. set up for an organization
+  
+---
+  
+## Windows Autopilot devices
+  
+[<img src="https://i.imgur.com/iTxCBQ7.png">](https://i.imgur.com/iTxCBQ7.png)

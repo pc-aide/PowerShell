@@ -45,7 +45,8 @@ C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypas
 6. autoPilot.ps1
 ````
 Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Confirm:$false -Force:$true
-PowerShell -ExecutionPolicy Bypass -File d:\autoPilot\Get-WindowsAutoPilotInfo.ps1 -Online -Reboot -TenantId <tenantId> -appId <appId> -appSecret <appSecret>
+PowerShell -ExecutionPolicy Bypass -File d:\autoPilot\Get-WindowsAutoPilotInfo.ps1 `
+  -Online -Reboot -TenantId <tenantId> -appId <appId> -appSecret <appSecret>
 ````
 7. [Get-WindowsAutoPilotInfo.ps1](https://github.com/pc-aide/PowerShell/blob/main/Intune/AutoPilot/3.5/Get-WindowsAutoPilotInfo/Get-WindowsAutoPilotInfo.ps1)
 

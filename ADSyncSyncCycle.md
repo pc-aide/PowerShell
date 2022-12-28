@@ -2,6 +2,13 @@
 
 ---
 
+## Requirement
+````ps1
+Install-Module ADSync -Force
+````
+
+---
+
 ## List
 |n|name|e.g.|O/P|
 |-|----|----|---|

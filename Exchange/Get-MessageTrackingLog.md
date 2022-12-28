@@ -2,6 +2,13 @@
 
 ---
 
+## Requirement
+````ps1
+Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
+````
+
+---
+
 ## Get
 |n|name|e.g.|O/P|
 |-|----|----|---|

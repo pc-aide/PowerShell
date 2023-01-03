@@ -64,8 +64,8 @@ C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypas
 ````
 # ver : 03-01-2023
 
-# Rename : WX + <S/N>
-$Prefix = "WX"
+# Rename :  + <S/N>
+$Prefix = "TXG"
 $Sufix = (gwmi win32_bios).serialNumber
 $computerName = $Prefix+$Sufix
 Rename-Computer $computerName

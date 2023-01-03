@@ -62,9 +62,17 @@ C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe -ExecutionPolicy Bypas
 ````
 6. autoPilot.ps1
 ````
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Confirm:$false -Force:$true
-PowerShell -ExecutionPolicy Bypass -File d:\autoPilot\Get-WindowsAutoPilotInfo.ps1 `
-  -Online -TenantId <tenantId> -appId <appId> -appSecret <appSecret> -AssignedComputerName "$("TV"+(gwmi win32_bios).serialNumber)"
+# ver : 03-01-2023
+
+# Rename : WX + <S/N>
+$Prefix = "WX"
+$Sufix = (gwmi win32_bios).serialNumber
+$computerName = $Prefix+$Sufix
+Rename-Computer $computerName
+
+# auto enrollment AutoPilot
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -confirm:$false -force:$true
+PowerShell -ExecutionPolicy Bypass -File d:\AutoPilot\Get-WindowsAutoPilotInfo.ps1 -Online -TenantId 5f4cf755-29e3-4fe8-857e-28ba0cedfa43 -appid 7de4acb8-18fa-4d1a-80ec-ee4734322eda -appSecret fxf8Q~6KYo~YzRobpiZo2eIc24qXaleG3OheXbe5
 Restart-Computer -Force
 ````
 7. [Get-WindowsAutoPilotInfo.ps1](https://github.com/pc-aide/PowerShell/blob/main/Intune/AutoPilot/3.5/Get-WindowsAutoPilotInfo/Get-WindowsAutoPilotInfo.ps1)

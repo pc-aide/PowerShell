@@ -11,6 +11,7 @@
 |n|name|e.g.|O/P|
 |-|----|----|---|
 |1|adminCount|# optional : -SearchBase <br/>get-aduser -Filter {admincount -eq 0} -Properties adminCount -ResultSetSize $null \|<br/> fl adminCount,distinguishedName,UserPrincipalName|
+|2|accountExpires|get-aduser maxtar04 -Properties * \|<br/>fl name,<br/>@{n='accountExpires';e={[datetime]::FromFileTime($_."accountExpires")}}|name : max tarte<br/>accountExpires: 12-04-21 00:00:00|
 
 ---
 

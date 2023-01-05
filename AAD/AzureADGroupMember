@@ -1,0 +1,35 @@
+# AzureADGroupMember
+
+---
+
+## Requirement
+
+
+---
+
+## Get
+
+---
+
+## Add
+
+
+```ps1
+# Module
+Import-Module AzureAD -Force
+
+# Connect
+Connect-AzureAD
+
+# all member in group
+Get-AzureADGroupMember -ObjectId <string> -all $true |
+select DisplayName
+
+$Devices = Import-Csv $env:list_deviceID.txt -Delimiter ";"
+
+# ObjectId = adGroup
+# RefObjectId  = DeviceId
+foreach ($Device in $devices){
+ Add-AzureADGroupMember -ObjectId "<string>" -RefObjectId $Device.ObjectId
+}
+````

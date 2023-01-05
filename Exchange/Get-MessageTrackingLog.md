@@ -14,4 +14,4 @@ Add-PSSnapin Microsoft.Exchange.Management.PowerShell.SnapIn
 |-|----|----|---|
 |1|Recipients|Get-MessageTrackingLog -Start (Get-Date).AddHours(-1) -ResultSize Unlimited \|<br/> ? {$_.recipients -like "*gmail.com"}||
 |2|Sender|Get-MessageTrackingLog -Sender Alan.Reid@exchangeserverpro.net -Recipients alex.heyne@exchangeserverpro.net||
-|3|all SRV exchanges|Get-TransportServer \|<br/>Get-MessageTrackingLog -Recipients samuel.brochu@intel.ca -sender samuelBrochu@yahoo.fr -EventId Fail -Start (get-date).AddHours(-12) -ResultSize unlimited \|<br/>fl||
+|3|All exchanges|$list_exch = get-TransportServer<br/><br/>foreach ($exch in $list_exch){<br/>&ensp;get-MessageTrackingLog -Sender "samme@hotmail.com" -Recipients "tax@.mxt.com" -ResultSize unlimited –server $exch.name<br/>}|

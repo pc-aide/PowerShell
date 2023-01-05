@@ -3,7 +3,13 @@
 ---
 
 ## Requirement
+````ps1
+# Module
+Import-Module AzureAD -Force
 
+# Connect
+Connect-AzureAD
+````
 
 ---
 
@@ -15,15 +21,9 @@
 
 
 ```ps1
-# Module
-Import-Module AzureAD -Force
-
-# Connect
-Connect-AzureAD
-
-# all member in group
+# all members in a group
 Get-AzureADGroupMember -ObjectId <string> -all $true |
-select DisplayName
+select ObjectId,ObjectId
 
 $Devices = Import-Csv $env:list_deviceID.txt -Delimiter ";"
 

@@ -10,8 +10,11 @@
 # Module
 Install-Module microsoft.graph.intune -Force
 
-# Login
+# Login graph
 Connect-MSGraph
+
+# login AAD
+connect-azureAD
 ````
 
 ---

@@ -11,7 +11,7 @@ Connect-MsolService
 
 ---
 
-## get
+## Get
 |n|name|e.g.|O/P|
 |-|----|----|---|
 |1|all (Iphone, device, android, etc) |Get-MsolDevice -All||

@@ -2,6 +2,14 @@
 
 ---
 
+## Req
+````ps1
+# Pass-through
+Connect-VIServer -Server vce01
+````
+
+---
+
 ## Get
 |n|name|e.g.|O/P|
 |-|----|----|---|

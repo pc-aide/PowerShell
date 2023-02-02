@@ -5,7 +5,7 @@
 ## Connect
 ````ps1
 # Pass-through
-Connect-VIServer -Server vcenter01
+Connect-VIServer -Server vce01
 ````
 
 ---

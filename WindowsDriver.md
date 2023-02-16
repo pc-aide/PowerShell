@@ -9,6 +9,10 @@
 
 ---
 
+## pnputil.exe
+
+---
+
 ## Get
 ### get-member -memberType properties
 |n|name|e.g.|O/P|
@@ -18,4 +22,4 @@
 |n|name|e.g.|O/P|
 |-|----|----|---|
 |1|all INFs|Get-WindowsDriver -Online -All||
-|2|out-gridView (Filter-GUI)|Get-WindowsDriver -Online -All \|out-gridView||
+|2|out-gridView (Filter-GUI)|Get-WindowsDriver -Online -All \|<br/>out-gridView||

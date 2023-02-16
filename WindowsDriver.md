@@ -9,7 +9,7 @@
 
 ---
 
-## pnputil.exe
+## pnpUtil.exe
 
 ---
 

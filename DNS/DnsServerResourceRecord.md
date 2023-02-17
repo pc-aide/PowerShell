@@ -27,4 +27,4 @@
 |-|----|----|---|
 |1|DNS |Remove-DnsServerResourceRecord -ZoneName mtq.local -ComputerName A01DNS0001 -Name T01ASR0002 -RRType A -Force||
 |2|DNS & PTR|$node = get-DnsServerResourceRecord -ZoneName srt.local -ComputerName DNS01 -Name TAR1<br/>Remove-DnsServerResourceRecord -ZoneName srt.local -ComputerName DNS01 -InputObject $Node -Force
-|3|PTR|Remove-DnsServerResourceRecord -ZoneName 10.in-addr.arpa -RRType "PTR" -ComputerName DNS01 -Name "131.102.90" -Force|
+|3|PTR|# name = reverse IP<br/>Remove-DnsServerResourceRecord -ZoneName 10.in-addr.arpa -RRType "PTR" -ComputerName DNS01 -Name "131.102.90" -Force|

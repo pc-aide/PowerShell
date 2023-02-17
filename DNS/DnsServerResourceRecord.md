@@ -26,3 +26,4 @@
 |n|name|e.g.|O/P|
 |-|----|----|---|
 |1|DNS |Remove-DnsServerResourceRecord -ZoneName mtq.local -ComputerName A01DNS0001 -Name T01ASR0002 -RRType A -Force||
+|2|DNS & PTR|$node = get-DnsServerResourceRecord -ZoneName srt.local -ComputerName DNS01 -Name TAR1<br/>Remove-DnsServerResourceRecord -ZoneName srt.local -ComputerName DNS01 -InputObject $Node -Force

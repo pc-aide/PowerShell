@@ -1,3 +1,8 @@
+````ps1
+set-primaryUser.ps1
+````
+
+* O/P 
 ````txt
  Device name: <DeviceName>
 Intune Device Primary User: <userId>

@@ -16,18 +16,32 @@
 
 $List_PrimaryUser = Import-Csv "c:\temp\list_primaryUser.txt" -Delimiter ";"
 
+####################################################
+
+# REQUIREMENTS
+
+####################################################
+
+$Module = Get-Module -Name AzureAD
+if ($Module -eq $null){
+    Install-Module -Name AzureAD -Force
+    Import-Module -Name AzureAd -Force
+}
+
+####################################################
+
 function Get-AuthToken {
 
 <#
 .SYNOPSIS
-  This function is used to authenticate with the Graph API REST interface
+This function is used to authenticate with the Graph API REST interface
 .DESCRIPTION
-  The function authenticate with the Graph API Interface with the tenant name
+The function authenticate with the Graph API Interface with the tenant name
 .EXAMPLE
-  Get-AuthToken
-  Authenticates you with the Graph API interface
+Get-AuthToken
+Authenticates you with the Graph API interface
 .NOTES
-  NAME: Get-AuthToken
+NAME: Get-AuthToken
 #>
 
 [cmdletbinding()]

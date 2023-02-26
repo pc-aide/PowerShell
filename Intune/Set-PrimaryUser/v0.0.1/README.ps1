@@ -4,6 +4,11 @@
     1) Validate if acces to change PrimaryUser - ref 
     2) Validate if azureADUser exist : 
     3) token expired ... -valid 60min ?
+    
+    .COPYRIGHT
+      Copyright (c) Microsoft Corporation. All rights reserved. Licensed under the MIT license.
+      See LICENSE in the project root for license information.
+      https://github.com/microsoftgraph/powershell-intune-samples/blob/master/ManagedDevices/Win10_PrimaryUser_Get.ps1
 
 #>
 

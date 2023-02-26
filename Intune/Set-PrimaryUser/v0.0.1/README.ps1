@@ -10,7 +10,7 @@
       See LICENSE in the project root for license information.
       https://github.com/microsoftgraph/powershell-intune-samples/blob/master/ManagedDevices/Win10_PrimaryUser_Get.ps1
       
-      CSV file : Headers : DeviceName;UPN
+      CSV file, Headers : DeviceName;UPN
 
 #>
 

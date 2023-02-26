@@ -27,3 +27,7 @@ At line:388 char:3
     + CategoryInfo          : OperationStopped: (Set-IntuneDevicePrimaryUser error:String) [], RuntimeException
     + FullyQualifiedErrorId : Set-IntuneDevicePrimaryUser error
 ````
+
+* imag :
+
+[<img src="https://i.imgur.com/Q8JnSgC.png">](https://i.imgur.com/Q8JnSgC.png)

@@ -22,6 +22,9 @@ $List_PrimaryUser = Import-Csv "c:\temp\list_primaryUser.txt" -Delimiter ";"
 
 ####################################################
 
+# Elevated privileges
+
+# Module
 $Module = Get-Module -Name AzureAD
 if ($Module -eq $null){
     Install-Module -Name AzureAD -Force

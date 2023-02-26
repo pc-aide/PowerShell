@@ -14,6 +14,10 @@
 
 #>
 
+# Log
+$Today = Get-Date
+Start-Transcript -path "c:\Temp\$($Today.ToString('dd-MM-yyyy.HH-mm-ss')).set-primaryUser.log" -append
+
 $List_PrimaryUser = Import-Csv "c:\temp\list_primaryUser.txt" -Delimiter ";"
 
 ####################################################
@@ -385,7 +389,6 @@ $userId
 		$responseBody = $reader.ReadToEnd();
 		Write-Host "Response content:`n$responseBody" -f Red
 		Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
-		throw "Set-IntuneDevicePrimaryUser error"
 	}
 
 }
@@ -507,3 +510,5 @@ foreach($PrimaryUser in $List_PrimaryUser){
 
     Write-Host
 }
+
+Stop-Transcript

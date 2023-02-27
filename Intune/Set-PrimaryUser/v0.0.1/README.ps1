@@ -278,8 +278,8 @@ $User_resource = "users"
     
     }
 
+    # AADUser don't exist :
     catch {
-
     $ex = $_.Exception
     $errorResponse = $ex.Response.GetResponseStream()
     $reader = New-Object System.IO.StreamReader($errorResponse)
@@ -289,8 +289,6 @@ $User_resource = "users"
     Write-Host "Response content:`n$responseBody" -f Red
     Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
     write-host
-    break
-
     }
 
 }

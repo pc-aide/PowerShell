@@ -2,7 +2,12 @@
 
 ---
 
-## Req
+## Requirement
+1. PS ver 6.x or higher
+
+---
+
+## Connect
 ````ps1
 # Pass-through
 Connect-VIServer -Server vce01

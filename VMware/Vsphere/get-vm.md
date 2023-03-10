@@ -2,6 +2,11 @@
 
 ---
 
+# Requirement
+1. ps ver 6.x or higher
+
+---
+
 ## Connect
 ````ps1
 # Pass-through

@@ -1,4 +1,4 @@
-Function get-CollectionName-cmDevice { 
+Function Get-CollectionName-cmDevice { 
 
   # Switch Hostname 
   param([parameter(Mandatory=$true)] [String]$HostName) 

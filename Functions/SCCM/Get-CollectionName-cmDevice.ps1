@@ -1,6 +1,6 @@
 # CollectionName for cmDevice 
 
-Function sms_CollectionName_cmDevice { 
+Function Get-CollectionName-cmDevice { 
 
   # Switch Hostname 
   param([parameter(Mandatory=$true)] [String]$HostName) 

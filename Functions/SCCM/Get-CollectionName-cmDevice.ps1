@@ -5,7 +5,8 @@ Function Get-CollectionName-cmDevice {
   # Switch Hostname 
   param([parameter(Mandatory=$true)] [String]$HostName) 
 
-  (Get-WmiObject -ComputerName MMTRLPALPINF151.Prod.MJQ.Local  -Namespace root/SMS/site_mjq ` 
+  # ComputerName : <FQDN_SCCM> & root/SMS/site_<3_charactes_of_SCCM>
+  (Get-WmiObject -ComputerName <FQDN_SCCM>  -Namespace root/SMS/site_<3_charactes_of_SCCM> ` 
 
   -Query "SELECT SMS_Collection.* FROM SMS_FullCollectionMembership, 
 

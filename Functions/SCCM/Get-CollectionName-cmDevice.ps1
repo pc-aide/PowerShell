@@ -4,7 +4,7 @@ Function Get-CollectionName-cmDevice {
   param([parameter(Mandatory=$true)] [String]$HostName) 
   # ComputerName = FQDN of our sccM
   $ComputerName = "SCCM01.local"
-  # Site = 3x characteres of our site
+  # Site = Code of site
   $Site = "PRD"
 
 (Get-WmiObject -ComputerName $ComputerName  -Namespace root/SMS/site_$Site `

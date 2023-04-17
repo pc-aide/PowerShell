@@ -197,6 +197,52 @@ param
 	}
 }
 
+function Get-Win10IntuneManagedDevices {
+[cmdletbinding()]
+
+param
+(
+[parameter(Mandatory=$false)]
+[ValidateNotNullOrEmpty()]
+[string]$deviceName
+)
+    
+    $graphApiVersion = "beta"
+
+    try {
+
+        if($deviceName){
+
+            $Resource = "deviceManagement/managedDevices?`$filter=deviceName eq '$deviceName'"
+	        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" 
+
+            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
+
+        }
+
+        else {
+
+            $Resource = "deviceManagement/managedDevices?`$filter=(((deviceType%20eq%20%27desktop%27)%20or%20(deviceType%20eq%20%27windowsRT%27)%20or%20(deviceType%20eq%20%27winEmbedded%27)%20or%20(deviceType%20eq%20%27surfaceHub%27)))"
+	        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+        
+            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
+
+        }
+
+	} catch {
+		$ex = $_.Exception
+		$errorResponse = $ex.Response.GetResponseStream()
+		$reader = New-Object System.IO.StreamReader($errorResponse)
+		$reader.BaseStream.Position = 0
+		$reader.DiscardBufferedData()
+		$responseBody = $reader.ReadToEnd();
+		Write-Host "Response content:`n$responseBody" -f Red
+		Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
+		throw "Get-IntuneManagedDevices error"
+	}
+
+}
+
 function Get-IntuneDevicePrimaryUser {
 [cmdletbinding()]
 

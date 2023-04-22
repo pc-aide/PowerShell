@@ -222,7 +222,7 @@ function Get-Win10IntuneManagedDevices {
           if($deviceName){
   
               $Resource = "deviceManagement/managedDevices?`$filter=deviceName eq '$deviceName'"
-                $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" 
+            $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" 
   
               (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
   
@@ -263,12 +263,13 @@ function Get-UserUPNOwnedDevices {
 
     $graphApiVersion = "v1.0"
     $Resource = "users"
-    $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" + "/" + $upn + "/managedDevices"
+    $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" + "/" + $upn + "/ownedDevices"
 
     try {
 
         $ownedDevices = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
-        return $ownedDevices.value.deviceName
+        $filteredDevices = $ownedDevices.value | Where-Object { $_.isManaged -eq $true }
+        return $filteredDevices."displayName"
 
     } catch {
         $ex = $_.Exception
@@ -420,7 +421,7 @@ else {
 # Créer la GUI
 Add-Type -AssemblyName System.Windows.Forms
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "PrimaryUser v0.1 - LastUpdate 22-04-2023"
+$Form.Text = "PrimaryUser v0.1 - LastUpdate 15-04-2023"
 $Form.Width = 400
 $Form.Height = 350
 

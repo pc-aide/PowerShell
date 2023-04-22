@@ -420,7 +420,7 @@ else {
 # Créer la GUI
 Add-Type -AssemblyName System.Windows.Forms
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "PrimaryUser v0.1 - LastUpdate 15-04-2023"
+$Form.Text = "PrimaryUser v0.1 - LastUpdate 22-04-2023"
 $Form.Width = 400
 $Form.Height = 350
 

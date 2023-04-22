@@ -1,9 +1,3 @@
-param
-(
-[parameter(Mandatory=$false)]
-$DeviceName
-)
-
 function Get-AuthToken {
 [cmdletbinding()]
 
@@ -71,8 +65,11 @@ Write-Host "Checking for AzureAD module..."
 [System.Reflection.Assembly]::LoadFrom($adalforms) | Out-Null
 
 $clientId = "d1ddf0e4-d672-4dae-b554-9d5bdfd93547"
+
 $redirectUri = "urn:ietf:wg:oauth:2.0:oob"
+
 $resourceAppIdURI = "https://graph.microsoft.com"
+
 $authority = "https://login.microsoftonline.com/$Tenant"
 
     try {
@@ -108,6 +105,9 @@ $authority = "https://login.microsoftonline.com/$Tenant"
 
         Write-Host
         Write-Host "Authorization Access Token is null, please re-run authentication..." -ForegroundColor Red
+        Write-Host
+        break
+
         }
 
     }
@@ -117,13 +117,17 @@ $authority = "https://login.microsoftonline.com/$Tenant"
     write-host $_.Exception.Message -f Red
     write-host $_.Exception.ItemName -f Red
     write-host
+    break
 
     }
 
 }
 
+####################################################
+
 function Get-Win10IntuneManagedDevice {
 [cmdletbinding()]
+
 param
 (
 [parameter(Mandatory=$false)]
@@ -166,6 +170,8 @@ param
 	}
 
 }
+
+####################################################
 
 function Get-AADDeviceId {
 [cmdletbinding()]
@@ -197,53 +203,114 @@ param
 	}
 }
 
+####################################################
+
 function Get-Win10IntuneManagedDevices {
-[cmdletbinding()]
+  [cmdletbinding()]
+  
+  param
+  (
+  [parameter(Mandatory=$false)]
+  [ValidateNotNullOrEmpty()]
+  [string]$deviceName
+  )
+      
+      $graphApiVersion = "beta"
+  
+      try {
+  
+          if($deviceName){
+  
+              $Resource = "deviceManagement/managedDevices?`$filter=deviceName eq '$deviceName'"
+            $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" 
+  
+              (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
+  
+          }
+  
+          else {
+  
+              $Resource = "deviceManagement/managedDevices?`$filter=(((deviceType%20eq%20%27desktop%27)%20or%20(deviceType%20eq%20%27windowsRT%27)%20or%20(deviceType%20eq%20%27winEmbedded%27)%20or%20(deviceType%20eq%20%27surfaceHub%27)))"
+            $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+          
+              (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
+  
+          }
+  
+    } catch {
+      $ex = $_.Exception
+      $errorResponse = $ex.Response.GetResponseStream()
+      $reader = New-Object System.IO.StreamReader($errorResponse)
+      $reader.BaseStream.Position = 0
+      $reader.DiscardBufferedData()
+      $responseBody = $reader.ReadToEnd();
+      Write-Host "Response content:`n$responseBody" -f Red
+      Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
+      throw "Get-IntuneManagedDevices error"
+    }
+  
+  }
 
-param
-(
-[parameter(Mandatory=$false)]
-[ValidateNotNullOrEmpty()]
-[string]$deviceName
-)
-    
-    $graphApiVersion = "beta"
+####################################################
 
-    try {
+function Get-IntuneDeviceByPrimaryUser {
+  [cmdletbinding()]
+  
+  param
+  (
+      [Parameter(Mandatory=$true)]
+      [string] $primaryUserEmail
+  )
+  
+      $graphApiVersion = "v1.0"
+      $Resource = "deviceManagement/managedDevices"
+      $uriBase = "https://graph.microsoft.com/$graphApiVersion/$($Resource)?$select=id,deviceName&$top=999"
+  
+      try {
+          
+          $allDevices = @()
+          $nextLink = $uriBase
+  
+          do {
+              $response = Invoke-RestMethod -Uri $nextLink -Headers $authToken -Method Get
+              $allDevices += $response.value
+              $nextLink = $response.'@odata.nextLink'
+          } while ($nextLink -ne $null)
+  
+          $filteredDeviceNames = @()
+  
+          foreach ($device in $allDevices) {
+              $deviceId = $device.id
+              $deviceUri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$($deviceId)/users"
+              $deviceUsers = Invoke-RestMethod -Uri $deviceUri -Headers $authToken -Method Get
+  
+              if ($deviceUsers.value -ne $null) {
+                  foreach ($user in $deviceUsers.value) {
+                      if ($user.userPrincipalName -eq $primaryUserEmail) {
+                          $filteredDeviceNames += $device.deviceName
+                      }
+                  }
+              }
+          }
+  
+          return $filteredDeviceNames
+          
+      } catch {
+          $ex = $_.Exception
+          $errorResponse = $ex.Response.GetResponseStream()
+          $reader = New-Object System.IO.StreamReader($errorResponse)
+          $reader.BaseStream.Position = 0
+          $reader.DiscardBufferedData()
+          $responseBody = $reader.ReadToEnd();
+          Write-Host "Response content:`n$responseBody" -f Red
+          Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
+          throw "Get-IntuneDeviceByPrimaryUser error"
+      }
+  }  
+  
+####################################################
 
-        if($deviceName){
-
-            $Resource = "deviceManagement/managedDevices?`$filter=deviceName eq '$deviceName'"
-	        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" 
-
-            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
-
-        }
-
-        else {
-
-            $Resource = "deviceManagement/managedDevices?`$filter=(((deviceType%20eq%20%27desktop%27)%20or%20(deviceType%20eq%20%27windowsRT%27)%20or%20(deviceType%20eq%20%27winEmbedded%27)%20or%20(deviceType%20eq%20%27surfaceHub%27)))"
-	        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-        
-            (Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get).value
-
-        }
-
-	} catch {
-		$ex = $_.Exception
-		$errorResponse = $ex.Response.GetResponseStream()
-		$reader = New-Object System.IO.StreamReader($errorResponse)
-		$reader.BaseStream.Position = 0
-		$reader.DiscardBufferedData()
-		$responseBody = $reader.ReadToEnd();
-		Write-Host "Response content:`n$responseBody" -f Red
-		Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
-		throw "Get-IntuneManagedDevices error"
-	}
-
-}
-
-function Get-IntuneDevicePrimaryUser {
+function Get-AADDevicesRegisteredOwners {
 [cmdletbinding()]
 
 param
@@ -251,17 +318,33 @@ param
     [Parameter(Mandatory=$true)]
     [string] $deviceId
 )
-    
     $graphApiVersion = "beta"
-    $Resource = "deviceManagement/managedDevices"
-	$uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)" + "/" + $deviceId + "/users"
+    $Resource = "devices"
+	$uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$deviceId/registeredOwners"
 
     try {
         
-        $primaryUser = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
+        $registeredOwners = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
 
-        return $primaryUser.value."id"
+        Write-Host "AAD Registered Owner:" -ForegroundColor Yellow
+
+        if(@($registeredOwners.value).count -ge 1){
+
+            for($i=0; $i -lt $registeredOwners.value.Count; $i++){
+            
+                Write-Host "Id:" $registeredOwners.value[$i]."id"
+                Write-Host "Name:" $registeredOwners.value[$i]."displayName"
+            
+            }
+
+        }
+
+        else {
+
+            Write-Host "No registered Owner found in Azure Active Directory..." -ForegroundColor Red
         
+        }
+
 	} catch {
 		$ex = $_.Exception
 		$errorResponse = $ex.Response.GetResponseStream()
@@ -271,98 +354,13 @@ param
 		$responseBody = $reader.ReadToEnd();
 		Write-Host "Response content:`n$responseBody" -f Red
 		Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
-		throw "Get-IntuneDevicePrimaryUser error"
+		throw "Get-AADDevicesRegisteredOwners error"
 	}
 }
 
-function Delete-IntuneDevicePrimaryUser {
+####################################################
 
-<#
-.SYNOPSIS
-This deletes the Intune device primary user
-.DESCRIPTION
-This deletes the Intune device primary user
-.EXAMPLE
-Delete-IntuneDevicePrimaryUser
-.NOTES
-NAME: Delete-IntuneDevicePrimaryUser
-#>
-
-[cmdletbinding()]
-
-param
-(
-[parameter(Mandatory=$true)]
-[ValidateNotNullOrEmpty()]
-$IntuneDeviceId
-)
-    
-    $graphApiVersion = "beta"
-    $Resource = "deviceManagement/managedDevices('$IntuneDeviceId')/users/`$ref"
-
-    try {
-
-        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
-
-        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Delete
-
-	}
-
-    catch {
-
-		$ex = $_.Exception
-		$errorResponse = $ex.Response.GetResponseStream()
-		$reader = New-Object System.IO.StreamReader($errorResponse)
-		$reader.BaseStream.Position = 0
-		$reader.DiscardBufferedData()
-		$responseBody = $reader.ReadToEnd();
-		Write-Host "Response content:`n$responseBody" -f Red
-		Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
-		throw "Delete-IntuneDevicePrimaryUser error"
-	
-    }
-
-}
-
-function Get-AADDevicesRegisteredOwners {
-    [cmdletbinding()]
-    param (
-        [Parameter(Mandatory=$true)]
-        [string] $deviceId
-    )
-
-    $graphApiVersion = "beta"
-    $Resource = "devices"
-    $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)/$deviceId/registeredOwners"
-
-    try {
-        $registeredOwners = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
-
-        if(@($registeredOwners.value).count -ge 1){
-            $owners = @()
-            foreach($owner in $registeredOwners.value){
-                $owners += $owner.userPrincipalName
-            }
-            return $owners -join ","
-        }
-        
-    } catch {
-        $ex = $_.Exception
-        $errorResponse = $ex.Response.GetResponseStream()
-        $reader = New-Object System.IO.StreamReader($errorResponse)
-        $reader.BaseStream.Position = 0
-        $reader.DiscardBufferedData()
-        $responseBody = $reader.ReadToEnd();
-        Write-Host "Response content:`n$responseBody" -f Red
-        Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
-        throw "Get-AADDevicesRegisteredOwners error"
-    }
-}
-
-
-
-
-# region Authentication
+#region Authentication
 
 write-host
 
@@ -404,22 +402,14 @@ else {
     $global:authToken = Get-AuthToken -User $User
 }
 
-if($DeviceName){
+#endregion
 
-    $Devices = Get-Win10IntuneManagedDevice -deviceName $DeviceName
-
-}
-
-else {
-
-    $Devices = Get-Win10IntuneManagedDevice
-
-}
+####################################################
 
 # Créer la GUI
 Add-Type -AssemblyName System.Windows.Forms
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "PrimaryUser v0.1 - LastUpdate 15-04-2023"
+$Form.Text = "PrimaryUser v0.1 - LastUpdate 22-04-2023"
 $Form.Width = 400
 $Form.Height = 350
 
@@ -480,49 +470,30 @@ $OKButton.Text = "OK"
 $OKButton.Location = New-Object System.Drawing.Point(100, 180)
 $OKButton.Add_Click(
 {
-     if ($RadioButtonGet.Checked) {
-        $TextBoxDeviceList.ForeColor = 'Green'
-        $TextBoxDeviceList.Text = "Traitement en cours..."
-        $EnterUPN = $TextBoxEnterUPN.Text
-        if($Devices){
-            $DevicesList = @()
+     if ($RadioButtonGet.Checked) 
+     {
+     
+      $EnterUPN = $textBoxEnterUPN.Text
 
-            foreach($device in $Devices){
-                $IntuneDevicePrimaryUser = Get-IntuneDevicePrimaryUser -deviceId $device.id
+      # Récupérez les noms de périphérique et les ajoutez au textBoxDeviceList
+      $deviceNames = Get-IntuneDeviceByPrimaryUser -primaryUserEmail $EnterUPN
 
-                if($IntuneDevicePrimaryUser -eq $null){
-                    $PrimaryUser = "No Intune Primary User Id set for Intune Managed Device"
-                }
-                else {
-                    $PrimaryUser = $IntuneDevicePrimaryUser
-                }
-
-                $aadDeviceId = Get-AADDeviceId -deviceId $device."azureActiveDirectoryDeviceId"
-
-                $registeredOwners = Get-AADDevicesRegisteredOwners -deviceId $aadDeviceId
-
-                if($registeredOwners -like "*$EnterUPN*"){
-                    $DevicesList += [PSCustomObject]@{
-                        DeviceName = $device."deviceName"
-                    }
-                }
-            }
-            if ($DevicesList.count -eq 0)
-            {
-                # jaune fonce
-                $TextBoxDeviceList.ForeColor = [System.Drawing.Color]::FromArgb(204, 204, 0)
-                $TextBoxDeviceList.Text = "Aucun resultat"
-            }
-            else{
-                $TextBoxDeviceList.ForeColor = 'Black'
-                $TextBoxDeviceList.Text = ($DevicesList | Format-Table -AutoSize -HideTableHeaders | Out-String).Trim()
-            }
-        }
-        else {
-            $TextBoxDeviceList.Text = "No Windows 10 devices found..."
-        }
+    if ($deviceNames -eq $null -or $deviceNames.Count -eq 0)
+    {
+      $textBoxDeviceList.ForeColor = [System.Drawing.Color]::FromArgb(255, 128, 0)
+      $textBoxDeviceList.Text = "No result"
     }
-    elseif ($RadioButtonRemove.Checked){
+    else
+    {
+      $textBoxDeviceList.ForeColor = "Black"
+      $textBoxDeviceList.Text = [System.String]::Join([Environment]::NewLine, $deviceNames)
+    }
+
+
+        
+    }
+    elseif ($RadioButtonRemove.Checked)
+    {
         $DeviceNames = $TextBoxDeviceList.Text -split "`r`n"
         
         foreach ($DeviceName in $DeviceNames) {

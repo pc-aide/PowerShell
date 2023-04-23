@@ -268,8 +268,21 @@ function Get-UserUPNOwnedDevices {
     try {
 
         $ownedDevices = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
-        $filteredDevices = $ownedDevices.value | Where-Object { $_.isManaged -eq $true } | select displayName,deviceId
-        return $filteredDevices."deviceId"
+        $filteredDevices = $ownedDevices.value | Where-Object { $_.isManaged -eq $true }
+
+        $validDevices = @()
+
+        foreach ($device in $filteredDevices) {
+            $deviceUri = "https://graph.microsoft.com/$graphApiVersion/deviceManagement/managedDevices?`$filter=deviceName eq '$($device.displayName)'"
+
+            $intuneDevice = Invoke-RestMethod -Uri $deviceUri -Headers $authToken -Method Get
+
+            if ($intuneDevice.value.Count -gt 0) {
+                $validDevices += $device
+            }
+        }
+
+        return $validDevices."displayName"
 
     } catch {
         $ex = $_.Exception

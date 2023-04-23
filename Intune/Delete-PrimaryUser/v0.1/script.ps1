@@ -273,14 +273,15 @@ function Get-UserUPNOwnedDevices {
         $validDevices = @()
 
         foreach ($device in $filteredDevices) {
-            $deviceUri = "https://graph.microsoft.com/$graphApiVersion/deviceManagement/managedDevices?`$filter=deviceName eq '$($device.displayName)'"
+    $deviceUri = "https://graph.microsoft.com/$graphApiVersion/deviceManagement/managedDevices?`$filter=deviceName eq '$($device.displayName)'"
 
-            $intuneDevice = Invoke-RestMethod -Uri $deviceUri -Headers $authToken -Method Get
+    $intuneDevice = Invoke-RestMethod -Uri $deviceUri -Headers $authToken -Method Get
 
-            if ($intuneDevice.value.Count -gt 0) {
-                $validDevices += $device
-            }
-        }
+    if ($intuneDevice.value.Count -gt 0 -and $intuneDevice.value[0].userPrincipalName -notlike "") {
+        $validDevices += $device
+    }
+}
+
 
         return $validDevices."displayName"
 

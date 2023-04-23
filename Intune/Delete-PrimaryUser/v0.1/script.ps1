@@ -385,6 +385,45 @@ param
 
 ####################################################
 
+function Delete-IntuneDevicePrimaryUser {
+[cmdletbinding()]
+
+param
+(
+[parameter(Mandatory=$true)]
+[ValidateNotNullOrEmpty()]
+$IntuneDeviceId
+)
+    
+    $graphApiVersion = "beta"
+    $Resource = "deviceManagement/managedDevices('$IntuneDeviceId')/users/`$ref"
+
+    try {
+
+        $uri = "https://graph.microsoft.com/$graphApiVersion/$($Resource)"
+
+        Invoke-RestMethod -Uri $uri -Headers $authToken -Method Delete
+
+	}
+
+    catch {
+
+		$ex = $_.Exception
+		$errorResponse = $ex.Response.GetResponseStream()
+		$reader = New-Object System.IO.StreamReader($errorResponse)
+		$reader.BaseStream.Position = 0
+		$reader.DiscardBufferedData()
+		$responseBody = $reader.ReadToEnd();
+		Write-Host "Response content:`n$responseBody" -f Red
+		Write-Error "Request to $Uri failed with HTTP Status $($ex.Response.StatusCode) $($ex.Response.StatusDescription)"
+		throw "Delete-IntuneDevicePrimaryUser error"
+	
+    }
+
+}
+
+####################################################
+
 #region Authentication
 
 write-host
@@ -434,7 +473,7 @@ else {
 # Créer la GUI
 Add-Type -AssemblyName System.Windows.Forms
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "PrimaryUser v0.1 - LastUpdate 15-04-2023"
+$Form.Text = "PrimaryUser v0.1 - LastUpdate 23-04-2023"
 $Form.Width = 400
 $Form.Height = 350
 

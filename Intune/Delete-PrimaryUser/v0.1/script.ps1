@@ -268,8 +268,8 @@ function Get-UserUPNOwnedDevices {
     try {
 
         $ownedDevices = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
-        $filteredDevices = $ownedDevices.value | Where-Object { $_.isManaged -eq $true }
-        return $filteredDevices."displayName"
+        $filteredDevices = $ownedDevices.value | Where-Object { $_.isManaged -eq $true } | select displayName,deviceId
+        return $filteredDevices."deviceId"
 
     } catch {
         $ex = $_.Exception
@@ -284,7 +284,6 @@ function Get-UserUPNOwnedDevices {
     }
 
 }
-
 
 ####################################################
 

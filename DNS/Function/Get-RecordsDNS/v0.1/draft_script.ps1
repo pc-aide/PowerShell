@@ -4,7 +4,7 @@ function Get-RecordsDNS {
         [string]$Hostname,
 
         [Parameter(Mandatory=$false)]
-        [string]$NewIPv4Address
+        [string]$NewIPv4Address # fix update PTR ...
     )
 
     $ForwardLookupZone = "mtl.local"

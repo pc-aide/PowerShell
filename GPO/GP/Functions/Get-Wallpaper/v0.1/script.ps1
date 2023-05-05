@@ -5,7 +5,7 @@ function Get-Wallpaper {
     )
 
     # Les noms de GPO statiques
-    $GpoNames = @("wallpaper_Std", "wwallpaper_Std_2","Wallpaper_Dev","Wallpaper_Dev_2")
+    $GpoNames = @("wallpaper_Std", "Wallpaper_Std_2","Wallpaper_Dev","Wallpaper_Dev_2")
 
     foreach ($GpoName in $GpoNames) {
         # Récupérer tous les GPOs

@@ -5,7 +5,7 @@ function Get-RecordsDNS {
     )
 
     $DomainName = "mtl.local"
-    $ServerName = "DNS"
+    $ServerName = "DNS01"
     $Output = @{}
 
     try {
@@ -21,36 +21,37 @@ function Get-RecordsDNS {
                 IPv4Address = $IPv4Address
             }
         }
-
-        if ($Output.ARecord) {
-            $Output.ARecord
-            Write-Output "`n" # Add an empty line
-        }
     }
     catch {
-        Write-Output "Failed to get A record. Checking for PTR record."
-        $ReverseIP = ($Hostname -split '\.')[-1..-4] -join '.'
-        $PTRZoneName = "10.in-addr.arpa"
+        Write-Output "Failed to get A record."
+    }
+    
+    $ReverseIP = ($Hostname -split '\.')[-1..-4] -join '.'
+    $PTRZoneName = "10.in-addr.arpa"
 
-        $PTRRecord = Get-DnsServerResourceRecord -ZoneName $PTRZoneName -ComputerName $ServerName -RRType Ptr |
-                     Where-Object { $_.RecordData.PtrDomainName -like "*$Hostname*" } |
-                     Select-Object hostname, RecordType -ExpandProperty RecordData
+    $PTRRecord = Get-DnsServerResourceRecord -ZoneName $PTRZoneName -ComputerName $ServerName -RRType Ptr |
+                 Where-Object { $_.RecordData.PtrDomainName -like "*$Hostname*" } |
+                 Select-Object hostname, RecordType -ExpandProperty RecordData
 
-        if ($PTRRecord) {
-            $Output += @{
-                PTRRecord = @{
-                    Hostname = $PTRRecord.hostname
-                    RecordType = $PTRRecord.RecordType
-                    PtrDomainName = $PTRRecord.PtrDomainName
-                }
-            }
-
-            if ($Output.PTRRecord) {
-                $Output.PTRRecord
+    if ($PTRRecord) {
+        $Output += @{
+            PTRRecord = @{
+                Hostname = $PTRRecord.hostname
+                RecordType = $PTRRecord.RecordType
+                PtrDomainName = $PTRRecord.PtrDomainName
             }
         }
-        else {
-            Write-Output "No PTR record found."
-        }
+    }
+    else {
+        Write-Output "No PTR record found."
+    }
+
+    if ($Output.ARecord) {
+        $Output.ARecord
+        Write-Output "`n" # Add an empty line
+    }
+    
+    if ($Output.PTRRecord) {
+        $Output.PTRRecord
     }
 }

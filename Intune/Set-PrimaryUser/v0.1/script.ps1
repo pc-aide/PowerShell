@@ -245,7 +245,7 @@ $TextBoxUser.Location = New-Object System.Drawing.Point(20, 40)
 $TextBoxUser.ForeColor = [System.Drawing.Color]::Gray
 
 # cue banner list users
-$cueBannerUser = "Enter the UPN and/or samAccountName per line" + [Environment]::NewLine + "E.g.: FirstName.LastName@contoso.com"
+$cueBannerUser = "Enter the UPN and/or samAccountName per line" + [Environment]::NewLine + "E.g.: FirstName.LastName@contoso.ca"
 
 # cue banner list users
 $TextBoxUser.Text = $cueBannerUser
@@ -304,28 +304,32 @@ $ButtonOK.Add_Click({
     $devices = $TextBoxDevice.Text -split "`r`n"
     $users = $TextBoxUser.Text -split "`r`n"
 
-    foreach ($line in 0..([Math]::Max($devices.Count, $users.Count) - 1)) {
-        $device = $devices[$line]
-        $user = $users[$line]
+    $lines = [Math]::Max($devices.Count, $users.Count)
 
-        if (-not [string]::IsNullOrWhiteSpace($device) -and -not [string]::IsNullOrWhiteSpace($user)) {
-            $deviceObject = Get-Win10IntuneManagedDevice -deviceName $device
+    for ($i = 0; $i -lt $lines; $i++) {
+        $deviceName = $devices[$i]
+        $userName = $users[$i]
 
-            if ($deviceObject) {
+        if ([string]::IsNullOrWhiteSpace($deviceName) -or [string]::IsNullOrWhiteSpace($userName)) {
+            continue
+        }
 
-                $userObject = Get-AADUser -Identity $user
+        $deviceObject = Get-Win10IntuneManagedDevice -deviceName $deviceName
+        $userObject = Get-AADUser -Identity $userName
 
-                if ($userObject) {
-                    $userId = $userObject.id
-                    Write-Host "Setting primary user for device $($deviceObject.deviceName) to user $user" -ForegroundColor Yellow
-                    Set-IntuneDevicePrimaryUser -IntuneDeviceId $deviceObject.id -UserId $userId
-                    Write-Host "Successfully set the Primary User for device $($deviceObject.deviceName)" -ForegroundColor Green
-                } else {
-                    Write-Host "User '$user' not found." -ForegroundColor Red
-                }
-            } else {
-                Write-Host "Device '$device' not found." -ForegroundColor Red
-            }
+        if (-not $deviceObject) {
+            Write-Host "Device '$deviceName' not found." -ForegroundColor Red
+        }
+
+        if (-not $userObject) {
+            Write-Host "User '$userName' not found." -ForegroundColor Red
+        }
+
+        if ($deviceObject -and $userObject) {
+            $userId = $userObject.id
+            Write-Host "Setting primary user for device $deviceName to user $($userObject.userPrincipalName)" -ForegroundColor Yellow
+            Set-IntuneDevicePrimaryUser -IntuneDeviceId $deviceObject.id -UserId $userId
+            Write-Host "Successfully set the Primary User for device $deviceName" -ForegroundColor Green
         }
     }
 

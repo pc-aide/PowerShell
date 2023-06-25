@@ -245,7 +245,7 @@ $TextBoxUser.Location = New-Object System.Drawing.Point(20, 40)
 $TextBoxUser.ForeColor = [System.Drawing.Color]::Gray
 
 # cue banner list users
-$cueBannerUser = "Enter the UPN and/or samAccountName per line" + [Environment]::NewLine + "E.g.: FirstName.LastName@promutuel.ca"
+$cueBannerUser = "Enter the UPN and/or samAccountName per line" + [Environment]::NewLine + "E.g.: FirstName.LastName@contoso.com"
 
 # cue banner list users
 $TextBoxUser.Text = $cueBannerUser

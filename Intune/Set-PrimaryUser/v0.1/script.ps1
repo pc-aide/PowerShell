@@ -1,7 +1,3 @@
-# REQUIREMENTS
-
-# Elevated privileges
-
 # Module
 $AadModule = Get-Module -Name AzureAD -ListAvailable
 if ($AadModule -eq $null) {

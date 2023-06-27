@@ -110,7 +110,7 @@ Function Get-AADUser {
         [string]$Identity
     )
 
-    $graphApiVersion = "v1.0"
+    $graphApiVersion = "beta"
     $User_resource = "users"
 
     try {
@@ -127,12 +127,24 @@ Function Get-AADUser {
         $response = Invoke-RestMethod -Uri $uri -Headers $authToken -Method Get
 
         if ($response.value.Count -gt 0) {
-            $response.value | Select-Object -First 1
+            $user = $response.value | Select-Object -First 1
+            
+            if($user.accountEnabled -eq $false) {
+                return @{Status='Disabled'; User=$null}
+            }
+            else {
+                return @{Status='Enabled'; User=$user}
+            }
         } else {
-            $null
+            return @{Status='NotFound'; User=$null}
         }
     } catch {
-        $null
+        if($_ -eq "UserDisabled") {
+            return @{Status='Disabled'; User=$null}
+        }
+        else {
+            return @{Status='Error'; User=$null}
+        }
     }
 }
 
@@ -241,7 +253,7 @@ $TextBoxUser.Location = New-Object System.Drawing.Point(20, 40)
 $TextBoxUser.ForeColor = [System.Drawing.Color]::Gray
 
 # cue banner list users
-$cueBannerUser = "Enter the UPN and/or samAccountName per line" + [Environment]::NewLine + "E.g.: FirstName.LastName@contoso.ca"
+$cueBannerUser = "Enter the UPN and/or samAccountName per line" + [Environment]::NewLine + "E.g.: FirstName.LastName@contoso.com"
 
 # cue banner list users
 $TextBoxUser.Text = $cueBannerUser
@@ -306,24 +318,33 @@ $ButtonOK.Add_Click({
         $deviceName = $devices[$i]
         $userName = $users[$i]
 
+        if ([string]::IsNullOrWhiteSpace($deviceName) -and [string]::IsNullOrWhiteSpace($userName)) {
+            continue
+        }
+
         if ([string]::IsNullOrWhiteSpace($deviceName) -or [string]::IsNullOrWhiteSpace($userName)) {
             continue
         }
 
         $deviceObject = Get-Win10IntuneManagedDevice -deviceName $deviceName
-        $userObject = Get-AADUser -Identity $userName
+        $userResult = Get-AADUser -Identity $userName
 
         if (-not $deviceObject) {
             Write-Host "Device '$deviceName' not found." -ForegroundColor Red
         }
 
-        if (-not $userObject) {
+        if ($userResult.Status -eq 'NotFound') {
             Write-Host "User '$userName' not found." -ForegroundColor Red
+        } 
+
+        if ($userResult.Status -eq 'Disabled') {
+            Write-Host "User '$userName' is disabled." -ForegroundColor Red
+            continue
         }
 
-        if ($deviceObject -and $userObject) {
-            $userId = $userObject.id
-            Write-Host "Setting primary user for device $deviceName to user $($userObject.userPrincipalName)" -ForegroundColor Yellow
+        if ($deviceObject -and $userResult.Status -eq 'Enabled') {
+            $userId = $userResult.User.id
+            Write-Host "Setting primary user for device $deviceName to user $($userResult.User.userPrincipalName)" -ForegroundColor Yellow
             Set-IntuneDevicePrimaryUser -IntuneDeviceId $deviceObject.id -UserId $userId
             Write-Host "Successfully set the Primary User for device $deviceName" -ForegroundColor Green
         }

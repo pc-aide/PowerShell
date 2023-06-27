@@ -235,7 +235,7 @@ if ($global:authToken) {
 Add-Type -AssemblyName System.Windows.Forms
 
 $Form = New-Object System.Windows.Forms.Form
-$Form.Text = "Set-PrimaryUser v0.1 | LastUpdate 25-06-2023"
+$Form.Text = "Set-PrimaryUser v0.1 | LastUpdate 27-06-2023"
 $Form.Size = New-Object System.Drawing.Size(500, 250)
 $Form.StartPosition = "CenterScreen"
 

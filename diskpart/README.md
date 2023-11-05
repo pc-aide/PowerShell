@@ -9,7 +9,7 @@
 
 ---
 
-## format
+## Format
 1. convert mbr
 2. create partition primary
 3. select partition 1
